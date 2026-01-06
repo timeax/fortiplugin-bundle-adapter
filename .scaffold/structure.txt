@@ -1,0 +1,12 @@
+src/
+  index.ts
+  vite/
+    prep.ts
+  babel/
+    transform.ts
+tests/
+  fixture-input.js
+  run-transform.mjs
+tsup.config.ts
+tsconfig.json
+tsconfig.build.json

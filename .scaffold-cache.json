@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "entries": {
+    "src/index.ts": {
+      "path": "src/index.ts",
+      "createdAt": "2026-01-06T05:20:05.984Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
+    },
+    "src/vite/prep.ts": {
+      "path": "src/vite/prep.ts",
+      "createdAt": "2026-01-06T05:20:05.988Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
+    },
+    "src/babel/transform.ts": {
+      "path": "src/babel/transform.ts",
+      "createdAt": "2026-01-06T05:20:05.990Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
+    },
+    "tsup.config.ts": {
+      "path": "tsup.config.ts",
+      "createdAt": "2026-01-06T05:28:51.400Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
+    },
+    "tsconfig.json": {
+      "path": "tsconfig.json",
+      "createdAt": "2026-01-06T05:28:51.402Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
+    },
+    "tsconfig.build.json": {
+      "path": "tsconfig.build.json",
+      "createdAt": "2026-01-06T05:28:51.404Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
+    },
+    "tests/fixture-input.js": {
+      "path": "tests/fixture-input.js",
+      "createdAt": "2026-01-06T05:57:58.492Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
+    },
+    "tests/run-transform.mjs": {
+      "path": "tests/run-transform.mjs",
+      "createdAt": "2026-01-06T05:57:58.493Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
+    }
+  }
+}
