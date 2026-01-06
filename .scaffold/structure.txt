@@ -2,6 +2,8 @@ src/
   index.ts
   vite/
     prep.ts
+  utils/
+    generate-plugin-inputs.ts
   babel/
     transform.ts
 tests/

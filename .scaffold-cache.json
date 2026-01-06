@@ -56,6 +56,13 @@
       "sizeAtCreate": 0,
       "groupName": "default",
       "groupRoot": "."
+    },
+    "src/utils/generate-plugin-inputs.ts": {
+      "path": "src/utils/generate-plugin-inputs.ts",
+      "createdAt": "2026-01-06T07:42:12.119Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
     }
   }
 }
