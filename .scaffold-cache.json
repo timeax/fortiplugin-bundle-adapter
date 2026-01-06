@@ -63,6 +63,20 @@
       "sizeAtCreate": 0,
       "groupName": "default",
       "groupRoot": "."
+    },
+    "src/runtime/create-factory.ts": {
+      "path": "src/runtime/create-factory.ts",
+      "createdAt": "2026-01-06T09:49:48.367Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
+    },
+    "src/runtime/create-resolver.ts": {
+      "path": "src/runtime/create-resolver.ts",
+      "createdAt": "2026-01-06T10:26:23.406Z",
+      "sizeAtCreate": 0,
+      "groupName": "default",
+      "groupRoot": "."
     }
   }
 }

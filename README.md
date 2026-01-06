@@ -19,9 +19,9 @@ Your plugin entry ends up like this (conceptually):
 
 ```ts
 export default function factory(deps) {
-  // deps.imports["react"], deps.imports["@host/ui"], ...
-  // plugin module code (rewritten)
-  return DefaultExport;
+    // deps.imports["react"], deps.imports["@host/ui"], ...
+    // plugin module code (rewritten)
+    return DefaultExport;
 }
 ```
 
@@ -125,6 +125,152 @@ Meaning: if a plugin writes `import HostUI from "@host/ui"`, the host may inject
 * `{ ... }` directly
 
 and the plugin still gets the “default” value.
+
+---
+
+## Runtime helpers (createFactory + resolver)
+
+Calling `factory({ imports })` directly works, but FortiPlugin hosts usually want a reusable runtime utility that:
+
+* imports the plugin entry by URL/path
+* resolves the correct export (`default` or named)
+* detects whether the export is a **prep factory** or a **component**
+* injects host dependencies (`react`, `react/jsx-runtime`, optional `@host/*`, optional `@inertiajs/*`)
+* merges props correctly (**host props win**)
+
+This package provides two runtime helpers for that.
+
+### `createFactory(file, env, opts?, hostProps?)`
+
+`createFactory()` dynamically imports the `file` and returns a callable renderer:
+
+* `render(props)` → returns a React element
+* `props` passed to `render()` are **defaults**
+* `hostProps` are **priority** (override collisions)
+
+```ts
+import React from "react";
+import * as JsxRuntime from "react/jsx-runtime";
+
+import { createFactory } from "fortiplugin-bundle-adapter/runtime/create-factory";
+
+const render = await createFactory(
+  "/build/plugins/foo.entry.mjs",
+  {
+    react: React,
+    jsxRuntime: JsxRuntime,
+
+    // optional: already-available host modules
+    imports: {
+      // "@host/ui": HostUI,
+      // "@inertiajs/core": InertiaCore,
+    },
+
+    // optional: dev-mode host bundles by CORS-safe URL
+    hostUrls: {
+      // "@host/ui": "https://host.example.com/forti/dev/exports/ui.mjs",
+    },
+  },
+  {
+    exportName: "default",
+    mode: "auto",
+  },
+  {
+    accountId: 123, // PRIORITY host props
+  }
+);
+
+// render() props are defaults; host props override collisions
+const element = render({ title: "Dashboard" });
+```
+
+### `createPluginResolver({ env, options, hostProps })`
+
+In real hosts, you don’t want to pass `env` everywhere. Instead, create a resolver once and reuse it.
+
+A resolver bundles your defaults (React/JSX runtime, import map, dev URLs, base host props) and exposes:
+
+* `resolver.resolve(file, overrides?)` → returns a prepared renderer (same shape as `createFactory`)
+* `resolver.with(overrides)` → creates a new resolver layered on top (great for “with inertia”, “with ui”, etc.)
+* `resolver.Embed` → a React component bound to the resolver (you only pass `file` + props)
+
+```ts
+import React from "react";
+import * as JsxRuntime from "react/jsx-runtime";
+
+import { createPluginResolver } from "fortiplugin-bundle-adapter/runtime/create-resolver";
+
+export const resolvePlugin = createPluginResolver({
+  env: {
+    react: React,
+    jsxRuntime: JsxRuntime,
+  },
+
+  // base PRIORITY props applied to every plugin render
+  hostProps: {
+    // accountId, permissions, pluginMeta, etc.
+  },
+});
+```
+
+#### Add optional deps once (Inertia / Host UI)
+
+```ts
+import * as InertiaCore from "@inertiajs/core";
+import * as HostUI from "./host-ui";
+
+export const resolvePluginWithInertia = resolvePlugin.with({
+  env: {
+    imports: {
+      "@inertiajs/core": InertiaCore,
+    },
+  },
+});
+
+export const resolvePluginWithUI = resolvePluginWithInertia.with({
+  env: {
+    imports: {
+      "@host/ui": HostUI,
+    },
+  },
+});
+```
+
+#### Dev-mode: load host bundles by URL
+
+```ts
+export const resolvePluginDev = resolvePlugin.with({
+  env: {
+    hostUrls: {
+      "@host/ui": "https://host.example.com/forti/dev/exports/ui.mjs",
+    },
+  },
+});
+```
+
+#### Use the resolver everywhere
+
+```ts
+const render = await resolvePluginWithUI.resolve("/build/plugins/foo.entry.mjs", {
+  hostProps: { accountId: 123 }, // per-call PRIORITY props
+});
+
+// defaults + host override
+const element = render({ title: "Dashboard" });
+```
+
+#### Use the bound React component
+
+```tsx
+const Embed = resolvePluginWithUI.Embed;
+
+<Embed
+  file="/build/plugins/foo.entry.mjs"
+  props={{ title: "Dashboard" }}
+  hostProps={{ accountId: 123 }}
+  fallback={<div>Loading…</div>}
+/>;
+```
 
 ---
 
@@ -327,24 +473,24 @@ const outFile = resolve(process.cwd(), process.argv[3] ?? "tests/fixture-output.
 const input = readFileSync(inputFile, "utf-8");
 
 const result = transformSync(input, {
-  filename: inputFile,
-  sourceType: "module",
-  plugins: [
-    [
-      fortiPrepTransform,
-      {
-        injectedIds: ["react", "react/jsx-runtime"],
-        injectedPrefixes: ["@inertiajs/", "@host/"],
-        runtimeKey: "imports",
-        depsParam: "deps",
-      },
+    filename: inputFile,
+    sourceType: "module",
+    plugins: [
+        [
+            fortiPrepTransform,
+            {
+                injectedIds: ["react", "react/jsx-runtime"],
+                injectedPrefixes: ["@inertiajs/", "@host/"],
+                runtimeKey: "imports",
+                depsParam: "deps",
+            },
+        ],
     ],
-  ],
-  generatorOpts: {
-    compact: false,
-    comments: true,
-    retainLines: false,
-  },
+    generatorOpts: {
+        compact: false,
+        comments: true,
+        retainLines: false,
+    },
 });
 
 if (!result?.code) throw new Error("No output produced");

@@ -6,6 +6,9 @@ src/
     generate-plugin-inputs.ts
   babel/
     transform.ts
+  runtime/
+    create-factory.ts
+    create-resolver.ts
 tests/
   fixture-input.js
   run-transform.mjs
