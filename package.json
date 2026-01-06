@@ -1,6 +1,6 @@
 {
   "name": "fortiplugin-bundle-adapter",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "",
   "files": [
     "dist"
@@ -20,7 +20,9 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "typecheck": "tsc -p tsconfig.json",
-    "test:transform": "node tests/run-transform.mjs"
+    "test:transform": "node tests/run-transform.mjs",
+    "prepublishOnly": "npm run build",
+    "postpublish": "npm version patch && git push origin --follow-tags"
   },
   "dependencies": {
     "@babel/core": "^7.28.5",
