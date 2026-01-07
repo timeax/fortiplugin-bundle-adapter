@@ -22,7 +22,7 @@
     "typecheck": "tsc -p tsconfig.json",
     "test:transform": "node tests/run-transform.mjs",
     "prepublishOnly": "npm run build",
-    "postpublish": "npm version patch && git commit -m \"Updated package.json\" && git push origin --follow-tags"
+    "postpublish": "npm version patch --no-git-tag-version && git add . && git commit -m \"Bump version\" && git push origin --follow-tags"
   },
   "dependencies": {
     "@babel/core": "^7.28.5",
