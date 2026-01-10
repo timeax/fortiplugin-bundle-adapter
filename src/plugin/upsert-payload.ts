@@ -1,10 +1,4 @@
-export type PermissionType =
-   | "db"
-   | "file"
-   | "notification"
-   | "module"
-   | "network"
-   | "codec";
+import { PermissionType } from "./decisions";
 
 /** --- db --- */
 export type DbPermissionActions = {

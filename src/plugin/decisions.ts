@@ -8,9 +8,7 @@ export type PermissionType =
    | "notification"
    | "module"
    | "network"
-   | "codec"
-   | (string & {});
-
+   | "codec";
 /**
  * previous = the concrete's CURRENT natural_key you are modifying.
  * (server will build a new naturalKey from current target + merged actions)

@@ -1,16 +1,8 @@
+import { PermissionType } from "./decisions";
+
 /* =========================================
  * Core primitives
  * ========================================= */
-
-export type PermissionType =
-  | "db"
-  | "file"
-  | "notification"
-  | "module"
-  | "network"
-  | "codec"
-  | (string & {}); // forward-compatible
-
 export type PermissionWindow =
   | null
   | {
